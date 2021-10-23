@@ -1,0 +1,47 @@
+pipeline{
+agent any
+stages{
+stage("build"){
+steps{
+echo 'building the application....'
+echo 'his this is sandeep i am going to build my application'
+}
+}
+stage("test"){
+steps{
+input ('Do you want to proceed?')
+echo 'testing the application....'
+}
+}
+stage("deploy"){
+when{
+not{
+branch "master"
+}
+}
+steps{
+echo 'deploying the application....'
+}
+}
+stage("Parallel"){
+parallel{
+stage("unit Test"){
+steps{
+echo 'Running the unit test.....'
+}
+}
+stage("Integration Test"){
+agent{
+docker{
+reuseNode false
+image 'ubuntu'
+}
+}
+steps{
+echo 'testing the application....'
+}
+}
+}
+}
+}
+}
